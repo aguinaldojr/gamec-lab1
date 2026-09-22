@@ -1,0 +1,387 @@
+<script>document.title="C-Lab — Primeira Inicialização - Prof. Aguinaldo";</script>
+<style>
+:root{color-scheme:dark;--bg:#07131f;--panel:#102538;--line:#31536b;--text:#e7f5ff;--muted:#a9c3d3;--cyan:#4cdbf4;--gold:#ffd16b;--green:#b0ef72;--red:#ff8293}*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#06101c,#123148);color:var(--text);font:16px/1.45 system-ui,Arial,sans-serif}button,input{font:inherit}button{cursor:pointer}.app{max-width:1120px;margin:auto;min-height:100vh;padding:18px}.bar{display:flex;justify-content:space-between;gap:12px;align-items:center;border:1px solid var(--line);border-radius:16px;background:#0b2031;padding:12px 18px}.brand{font-weight:800;font-size:1.25rem}.brand span{color:var(--cyan)}.small{font-size:.85rem;color:var(--muted)}.stats{display:flex;gap:16px;flex-wrap:wrap;font-weight:700}.stats b{color:var(--gold)}.body{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;margin-top:16px}.arena{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#071521;min-height:390px}canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;image-rendering:pixelated}.arena-label{position:absolute;top:12px;left:12px;background:#061420e8;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.8rem;pointer-events:none}.side{display:grid;gap:12px;align-content:start}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px}.panel h2{margin:0 0 8px;font-size:1rem;color:var(--cyan)}.panel p{margin:0;color:var(--muted)}.meter{height:8px;background:#061420;border-radius:99px;margin-top:12px;overflow:hidden}.meter i{display:block;height:100%;background:var(--green);width:0%;transition:width .2s}.sectors{display:grid;gap:6px}.sector{font-size:.84rem;color:var(--muted)}.sector.active{color:var(--cyan);font-weight:700}.sector.done{color:var(--green)}.controls{display:flex;gap:9px;align-items:center;margin-top:12px;justify-content:space-between}.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,44px);gap:4px}.pad button{border-radius:9px;background:#16384e;color:white;border:1px solid #487189;touch-action:none}.pad button[data-key=ArrowUp]{grid-column:2}.pad button[data-key=ArrowLeft]{grid-column:1}.pad button[data-key=ArrowDown]{grid-column:2}.pad button[data-key=ArrowRight]{grid-column:3}.hint{color:var(--muted);font-size:.86rem}.layer{position:absolute;inset:0;z-index:2;background:#04101de8;display:grid;place-items:center;padding:12px;overflow-y:auto}.layer[hidden]{display:none}.modal{width:min(680px,100%);max-height:100%;overflow:auto;background:#102538;border:1px solid #4b7790;border-radius:16px;padding:clamp(16px,3vw,25px);box-shadow:0 25px 60px #0008}.eyebrow{font-size:.8rem;color:var(--green);font-weight:800;letter-spacing:.08em;text-transform:uppercase}.modal h2{margin:6px 0 10px;font-size:1.4rem;line-height:1.25}.modal p{margin:6px 0 12px}.code{white-space:pre-wrap;background:#061521;border-left:3px solid var(--cyan);border-radius:8px;padding:12px;overflow:auto;font:clamp(.78rem,1.6vw,.95rem)/1.5 ui-monospace,Consolas,monospace}.answers{display:grid;gap:8px;margin:15px 0}.option,.piece,.primary,.secondary,.line,.move{border:1px solid #4b7790;background:#15364b;color:var(--text);border-radius:9px;padding:10px 12px;text-align:left;min-height:42px}.option:hover,.piece:hover,.line:hover,.move:hover{border-color:var(--cyan)}.option.selected,.piece.selected{border-color:var(--gold);background:#36512d}.option.correct{border-color:var(--green);background:#254b37}.option.wrong{border-color:var(--red);background:#573142}.primary{background:var(--cyan);border-color:var(--cyan);color:#05202b;font-weight:800;text-align:center;width:100%}.primary:disabled{opacity:.5;cursor:not-allowed}.secondary{text-align:center}.feedback{border-left:3px solid var(--gold);padding:9px 12px;background:#263142;margin:12px 0;color:#ffe8a5}.feedback[hidden]{display:none}.field{width:100%;background:#071723;border:1px solid #5d8398;border-radius:9px;color:white;padding:12px}.pairs{display:grid;gap:8px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}.pair select{width:100%;background:#071723;color:white;border:1px solid #5d8398;border-radius:8px;padding:9px;font:inherit}.slot{min-height:48px;border:2px dashed #6894a9;border-radius:9px;padding:9px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.chips{display:flex;gap:8px;flex-wrap:wrap}.piece{font-family:ui-monospace,Consolas,monospace}.order-row{display:flex;align-items:center;gap:6px}.order-row code{flex:1;background:#071723;padding:9px;border-radius:7px}.move{padding:7px 11px}.line{font-family:ui-monospace,Consolas,monospace;white-space:pre-wrap}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:14px 0}.result-grid div{border:1px solid var(--line);padding:10px;border-radius:9px}.result-grid strong{display:block;font-size:1.35rem;color:var(--cyan)}.foot{margin-top:10px;color:var(--muted);font-size:.8rem;text-align:center}@media(max-width:800px){.body{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,minmax(0,1fr))}.panel:last-child{grid-column:1/-1}.arena{min-height:unset}}@media(max-width:560px){.app{padding:8px}.bar{align-items:flex-start}.stats{gap:8px;font-size:.8rem}.body{gap:9px;margin-top:9px}.side{grid-template-columns:1fr}.panel:last-child{grid-column:auto}.arena{aspect-ratio:4/3}canvas{height:100%;aspect-ratio:auto}.modal{padding:14px}.layer{padding:6px}.pair{grid-template-columns:1fr}.hint{font-size:.78rem}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+/* O desafio inteiro fica em uma única área rolável, inclusive códigos longos de switch. */
+.arena{min-height:580px}
+.arena canvas{position:absolute;inset:0;width:100%;height:100%}
+#challenge .modal{display:block;max-height:100%;overflow-y:auto;overscroll-behavior:contain}
+#challenge #code{max-height:none;overflow:visible;overflow-wrap:anywhere}
+#challenge #prompt,#challenge #response,#challenge #feedback{max-height:none;overflow:visible}
+#challenge .primary{position:sticky;bottom:0;z-index:1;box-shadow:0 -8px 16px #102538}
+.line.selected{border:2px solid var(--gold);background:#304934;box-shadow:inset 0 0 0 1px #ffd16b55}
+.line.selected::before{content:'✓ SELECIONADA · ';color:var(--gold);font-weight:800}
+.line:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.order-row code{white-space:pre-wrap}
+.bar{flex-wrap:wrap}
+.sound-toggle{border:1px solid #4e7488;border-radius:999px;background:#143348;color:var(--text);padding:7px 12px;font-size:.82rem;white-space:nowrap}
+.sound-toggle:hover,.sound-toggle:focus-visible{border-color:var(--cyan)}
+.name-label{display:block;margin:15px 0 6px;font-weight:700;color:var(--cyan)}
+#playerName{margin-bottom:12px}
+.name-error{color:var(--red);font-size:.85rem;margin:0 0 10px!important}
+.name-error[hidden]{display:none}
+.time-result{display:grid;gap:2px;justify-items:center;border:1px solid var(--gold);border-radius:12px;background:#182b35;padding:12px;margin:12px 0;color:var(--text)}
+.time-result strong{font:800 1.7rem/1.2 ui-monospace,Consolas,monospace;color:var(--gold)}
+.time-result span{font-size:.85rem;color:var(--muted)}
+.final-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.final-actions .secondary{font-weight:800}
+.ranking-modal{width:min(740px,100%)}
+.ranking-note{color:var(--muted);font-size:.9rem}
+.ranking-head,.rank-row{display:grid;grid-template-columns:40px minmax(0,1.8fr) minmax(80px,.8fr) minmax(82px,.9fr) 88px;gap:8px;align-items:center}
+.ranking-head{padding:8px 11px;color:var(--muted);font-size:.77rem;font-weight:700}
+.rank-row{padding:10px 11px;background:#0b2031;border:1px solid var(--line);border-radius:9px;margin-bottom:6px;font-size:.84rem}
+.rank-row.current{border-color:var(--gold);background:#263136}
+.rank-name{overflow-wrap:anywhere}.rank-position{color:var(--gold);font-weight:800}.rank-score{font-weight:800;color:var(--cyan)}.rank-time{font-family:ui-monospace,Consolas,monospace}
+.rank-empty{text-align:center;padding:20px}
+.stats{margin-left:auto}
+.story{color:#d7e9f4!important;margin-bottom:12px!important}
+.badge-list{display:flex;flex-wrap:wrap;gap:7px;min-height:31px}
+.badge-chip{border:1px solid var(--badge-color);border-radius:999px;background:#0a1b2c;padding:5px 9px;font-size:.76rem;color:var(--text)}
+.badge-empty{color:var(--muted);font-size:.82rem}
+.milestone-modal,.final-modal{text-align:center;position:relative;z-index:1}
+.milestone-modal{border-color:var(--stage-accent,var(--green));animation:rewardEnter .65s cubic-bezier(.2,1.4,.3,1) both}
+.achievement-icon,.final-symbol{width:82px;height:82px;display:grid;place-items:center;margin:9px auto 14px;border:2px solid var(--stage-accent,var(--green));border-radius:24px;color:var(--stage-accent,var(--green));background:#071a27;font-size:3.1rem;box-shadow:0 0 35px color-mix(in srgb,var(--stage-accent,var(--green)) 45%,transparent);animation:badgeGlow 2.3s ease-in-out infinite}
+.reward{border:1px solid var(--stage-accent,var(--green));border-radius:10px;color:var(--stage-accent,var(--green));padding:10px;margin:14px 0 18px;font-weight:800}
+.final-modal{animation:rewardEnter .8s cubic-bezier(.2,1.4,.3,1) both}
+.final-symbol{--stage-accent:var(--gold);animation:badgeGlow 1.8s ease-in-out infinite}
+.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.confetti i{position:absolute;left:var(--x);top:-12%;font-style:normal;font-size:var(--size);color:var(--color);animation:confettiFall var(--duration) linear var(--delay) infinite}
+@keyframes rewardEnter{from{opacity:0;transform:translateY(28px) scale(.78)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes badgeGlow{50%{transform:scale(1.08);box-shadow:0 0 52px color-mix(in srgb,var(--stage-accent,var(--green)) 70%,transparent)}}
+@keyframes confettiFall{to{transform:translate(var(--drift),720px) rotate(680deg)}}
+@media(max-width:560px){.sound-toggle{order:3}.stats{margin-left:0}.badge-chip{font-size:.73rem}.ranking-head{display:none}.rank-row{grid-template-columns:30px 1fr auto;gap:5px}.rank-correct{grid-column:2}.rank-time{grid-column:3}.final-actions{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.milestone-modal,.final-modal,.achievement-icon,.final-symbol,.confetti i{animation:none!important}.confetti{display:none}}
+</style>
+</head>
+<body><div class="app"><header class="bar"><div><div class="brand"><span>C</span>-Lab · Primeira Inicialização</div><div class="small">Uma missão de lógica e programação em C</div></div><button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true">🔊 Som ligado</button><div class="stats" aria-live="polite"><span id="playerDisplay" hidden>Jogador <b id="playerLabel"></b></span><span>Tempo <b id="timeLabel">00:00:00</b></span><span>Setor <b id="stageCount">1/6</b></span><span>Acertos <b id="hits">0/34</b></span><span>XP <b id="xp">0</b></span></div></header><div class="body"><main><div class="arena"><canvas id="map" width="960" height="540" tabindex="0" aria-label="Mapa do laboratório. Mova o robô até o terminal iluminado usando setas ou WASD."></canvas><div class="arena-label" id="mapLabel">Tipos de dados</div><div class="layer" id="welcome"><div class="modal"><div class="eyebrow">Missão inicial</div><h2>Reative os sistemas do campus</h2><p>Uma falha desligou os sistemas do campus. Atravesse seis setores, resolva os desafios de C e recupere uma insígnia em cada setor. As respostas recebem explicação imediata.</p><p>Use as setas, WASD ou os botões na tela. Encoste no terminal luminoso para começar. O progresso desta partida fica salvo neste dispositivo.</p><label class="name-label" for="playerName">Como podemos chamar você?</label><input id="playerName" class="field" type="text" maxlength="24" autocomplete="off" placeholder="Seu nome" aria-describedby="nameError"><p id="nameError" class="name-error" role="alert" hidden>Digite um nome para começar.</p><button class="primary" id="start">Iniciar missão</button></div></div><div class="layer" id="challenge" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="title"><div class="eyebrow" id="topic"></div><h2 id="title"></h2><div class="code" id="code" hidden></div><p id="prompt"></p><div id="response" class="answers"></div><div class="feedback" id="feedback" role="status" hidden></div><button class="primary" id="check">Verificar</button></div></div><div class="layer" id="milestone" hidden><div class="modal milestone-modal" role="dialog" aria-modal="true" aria-labelledby="milestoneTitle"><div class="eyebrow">Setor restaurado</div><div class="achievement-icon" id="achievementIcon" aria-hidden="true">✦</div><h2 id="milestoneTitle"></h2><p id="milestoneText"></p><div class="reward" id="rewardText"></div><button class="primary" id="continueStage">Entrar no próximo setor</button></div></div><div class="layer" id="finish" hidden><div class="confetti" id="confetti" aria-hidden="true"></div><div class="modal final-modal"><div class="eyebrow">Relatório da missão</div><div class="final-symbol" aria-hidden="true">✦</div><h2>Campus online!</h2><p id="summary"></p><div class="time-result"><strong id="finalTime">00:00:00</strong><span>Tempo total de jogo</span></div><div class="result-grid" id="results"></div><div class="final-actions"><button class="secondary" id="viewRanking" type="button">Ver ranking</button><button class="primary" id="restart" type="button">Nova partida</button></div></div></div><div class="layer" id="ranking" hidden><div class="modal ranking-modal" role="dialog" aria-modal="true" aria-labelledby="rankingTitle"><div class="eyebrow">Hall de conquistas</div><h2 id="rankingTitle">15 maiores pontuações</h2><p class="ranking-note">Ranking deste navegador. Maior XP primeiro; em caso de empate, menor tempo.</p><div class="ranking-head" aria-hidden="true"><span>#</span><span>Jogador</span><span>XP</span><span>Acertos</span><span>Tempo</span></div><div id="rankingList" aria-label="Lista das 15 maiores pontuações"></div><button class="primary" id="backToResult" type="button">Voltar ao resultado</button></div></div></div><div class="controls"><span class="hint">Setas / WASD ou toque nos controles. Caminhe até o terminal.</span><div class="pad" aria-label="Controles do robô"><button data-key="ArrowUp" aria-label="Cima">▲</button><button data-key="ArrowLeft" aria-label="Esquerda">◀</button><button data-key="ArrowDown" aria-label="Baixo">▼</button><button data-key="ArrowRight" aria-label="Direita">▶</button></div></div></main><aside class="side"><section class="panel"><h2 id="sectorTitle">Tipos de dados</h2><p id="story" class="story"></p><p id="objective"></p><div class="meter"><i id="meter"></i></div><p class="small" id="sectorProgress"></p></section><section class="panel"><h2 id="badgeTitle">Insígnias 0/6</h2><div id="badges" class="badge-list" aria-live="polite"></div></section><section class="panel"><h2>Setores</h2><div class="sectors" id="sectors"></div></section></aside></div><div class="foot">Jogo introdutório: tipos · operadores · saída · entrada · erros de E/S · decisões</div></div>
+<script>
+/* Banco autoral. Tipos: choice, text, match, binary, fill, order, bug. */
+const BANK = {};
+const C=(prompt,code,options,answer,why)=>({kind:'choice',prompt,code,options,answer,why});
+const T=(prompt,code,answers,why)=>({kind:'text',prompt,code,answers,why});
+const M=(prompt,pairs,why,code)=>({kind:'match',prompt,pairs,why,code});
+const D=(prompt,items,why)=>({kind:'binary',prompt,items,why});
+const F=(prompt,code,pieces,answer,why)=>({kind:'fill',prompt,code,pieces,answer,why});
+const O=(prompt,pieces,answer,why)=>({kind:'order',prompt,pieces,answer,why});
+const B=(prompt,lines,answer,why)=>({kind:'bug',prompt,lines,answer,why});
+function group(id,items){BANK[id]=items.map((q,i)=>({...q,id:`${id}-${i+1}`,group:id}));}
+
+group('int',[
+ C('Qual declaração usa o tipo adequado para guardar uma quantidade inteira de estudantes?','/* quantidade: 42 */',['int alunos = 42;','float alunos = 42.0f;','char alunos = \'4\';','double alunos = 42.0;'],0,'int é o tipo apropriado para uma contagem inteira. Os demais exemplos armazenam um valor real ou um caractere.'),
+ T('Digite o valor de total após a atribuição.','int total = 12;\ntotal = total + 3;',['15'],'A nova atribuição soma 3 ao valor anterior: 15.'),
+ M('Ligue cada elemento à sua função.',[['int','tipo de número inteiro'],['idade','nome da variável'],['18','valor inicial']], 'Em int idade = 18;, o tipo, o identificador e o valor têm funções diferentes.')
+]);
+group('float',[
+ C('Qual tipo é apropriado para guardar 7.5 com precisão simples?','_____ nota = 7.5f;',['int','char','float','void'],2,'float guarda números com parte fracionária; o sufixo f indica literal float.'),
+ F('Encaixe a peça que completa a declaração de precisão simples.','_____ temperatura = 23.5f;',['float','int','char'],['float'],'float armazena valores reais com precisão simples.'),
+ T('Digite exatamente o valor exibido, incluindo uma casa decimal.','float x = 2.5f;\nprintf("%.1f", x);',['2.5'],'Com a localidade padrão de C, %.1f exibe 2.5, com ponto e uma casa decimal.')
+]);
+group('double',[
+ C('Qual declaração usa o tipo real de maior precisão entre as opções?','/* resultado decimal */',['double medida = 0.125;','char medida = \'0\';','int medida = 0;','float medida = 0.125f;'],0,'double costuma oferecer mais precisão do que float; int guarda inteiros e char guarda caracteres.'),
+ M('Associe cada trecho à descrição.',[['double','tipo real de maior precisão'],['3.14','literal real sem sufixo'],['3.14f','literal com sufixo float']], 'O sufixo f forma um literal float; sem ele, o literal real é double.'),
+ T('Qual valor aparece com duas casas decimais? Digite exatamente o número exibido.','double x = 1.5;\nprintf("%.2f", x);',['1.50'],'Com a localidade padrão de C, %.2f formata a saída com ponto e duas casas: 1.50.')
+]);
+group('char',[
+ C('Qual declaração inicializa corretamente um único caractere?','/* resposta: letra S */',["char resposta = 'S';",'char resposta = "S";','int resposta = "S";','char resposta = S;'],0,'Um caractere literal em C usa aspas simples.'),
+ F('Escolha as peças para formar uma declaração de um caractere.','_____ letra = _____;',['char',"'A'",'int','"A"'],['char',"'A'"],'O tipo é char e o literal de um caractere é escrito entre aspas simples.'),
+ B('Toque na linha que usa aspas inadequadas para um char.',["char inicial = 'M';",'char opcao = "S";',"printf(\"%c\", inicial);"],1,'"S" é uma string; para um único char, use \'S\'.')
+]);
+
+group('aritmeticos',[
+ C('Quanto vale resultado?','int resultado = 17 % 5;',['2','3','5','12'],0,'% fornece o resto da divisão inteira: 17 % 5 vale 2.'),
+ C('Qual o valor de x?','int x = 7 / 2;',['3','3.5','4','2'],0,'Com dois operandos inteiros, a divisão inteira descarta a parte fracionária.'),
+ T('Digite o número exibido.','printf("%d", 2 + 3 * 4);',['14'],'A multiplicação vem antes da adição: 2 + 12 = 14.'),
+ F('Encaixe o operador que calcula o resto.','int resto = 13 _____ 4;',['%','/','*','+'],['%'],'13 % 4 resulta em 1.'),
+ M('Associe cada expressão ao resultado e ao seu significado.',[['8 / 3','quociente 2'],['8 % 3','resto 2'],['8 - 3','diferença 5']], 'A divisão inteira fornece o quociente; % fornece o resto. Ambos valem 2 neste exemplo, mas têm significados diferentes.')
+]);
+group('atribuicao',[
+ C('Quanto vale x ao final?','int x = 4;\nx += 3;',['1','4','7','12'],2,'x += 3 equivale a x = x + 3; o resultado é 7.'),
+ T('Digite o valor final de saldo.','int saldo = 20;\nsaldo -= 6;',['14'],'saldo -= 6 subtrai 6 de 20.'),
+ C('Qual instrução multiplica x por 2 e guarda o resultado em x?','int x = 5;',['x *= 2;','x =+ 2;','x == 2;','x = 2;'],0,'x *= 2 equivale a x = x * 2.'),
+ F('Encaixe o operador de atribuição composta que divide n por 2.','int n = 12;\nn _____ 2;',['/=','*=','==','%='],['/='],'n /= 2 equivale a n = n / 2.'),
+ B('Toque na linha que compara onde deveria atualizar a variável.', ['int pontos = 10;','pontos == 12;','printf("%d", pontos);'],1,'== compara; pontos = 12; atribui um novo valor.')
+]);
+group('relacionais',[
+ C('Qual é o valor de teste?','int teste = (8 >= 8);',['0','1','8','Erro'],1,'A comparação é verdadeira; em C, a expressão relacional produz 1.'),
+ C('Qual expressão testa se idade é diferente de 18?','int idade = 20;',['idade = 18','idade != 18','idade <> 18','idade ! 18'],1,'!= é o operador de diferença.'),
+ T('Digite 0 ou 1 para o valor de resultado.','int resultado = (3 > 7);',['0'],'3 não é maior que 7; a comparação vale 0.'),
+ F('Encaixe o operador que testa igualdade.','if (codigo _____ 5) {\n    printf("OK");\n}',['==','=','!=','>='],['=='],'== compara valores; = atribui um valor.'),
+ M('Ligue o operador à comparação.',[['>=','maior ou igual'],['!=','diferente'],['<=','menor ou igual']], 'Os operadores relacionais produzem 1 para verdadeiro e 0 para falso.')
+]);
+group('logicos',[
+ C('Qual é o valor de acesso?','int acesso = (8 > 5 && 2 < 1);',['0','1','2','8'],0,'&& exige que ambas as condições sejam verdadeiras; a segunda é falsa.'),
+ C('Qual operador aceita pelo menos uma condição verdadeira?','if (temCartao ___ temSenha)',['&&','||','!','=='],1,'|| representa OU lógico.'),
+ T('Digite 0 ou 1 para o resultado.','int x = !(4 == 4);',['0'],'4 == 4 é verdadeiro; ! inverte o valor para 0.'),
+ F('Encaixe o operador para exigir as duas condições.','if (idade >= 18 _____ autorizado == 1)',['&&','||','!','%'],['&&'],'&& representa E lógico: ambas devem ser verdadeiras.'),
+ D('Para cada expressão, escolha somente 0 ou 1.',[['1 && 0',0],['1 || 0',1],['!1',0]], 'Em C, 0 é falso e 1 é verdadeiro. !1 resulta em 0; não existe um valor separado chamado "0 negado".')
+]);
+group('incremento',[
+ C('Qual é o valor final de n?','int n = 4;\nn++;',['4','5','6','3'],1,'n++ acrescenta uma unidade a n.'),
+ C('Qual instrução diminui uma unidade?','int n = 10;',['n--;','n++;','n += 1;','n == 1;'],0,'n-- decrementa a variável em uma unidade.'),
+ T('Digite o valor exibido.','int x = 2;\n++x;\nprintf("%d", x);',['3'],'++x incrementa x antes da chamada de printf.'),
+ F('Encaixe a instrução que aumenta contador em uma unidade.','int contador = 0;\ncontador_____;',['++','--','==','='],['++'],'contador++ incrementa seu valor em 1.'),
+ M('Associe as operações aos novos valores, partindo de n = 5.',[['n++','6'],['n--','4'],['n += 2','7']], 'Incremento, decremento e atribuição composta atualizam n de maneiras diferentes.')
+]);
+group('precedencia',[
+ C('Qual é o resultado?','int x = 10 - 2 * 3;',['24','4','8','18'],1,'A multiplicação ocorre primeiro: 10 - 6 = 4.'),
+ C('Qual expressão produz 16?','int x = _____;',['(2 + 2) * 4','2 + 2 * 4','(2 * 2) + 4','2 + (2 * 4)'],0,'Os parênteses fazem a soma ocorrer primeiro: 4 * 4 = 16.'),
+ T('Digite o valor exibido.','printf("%d", (8 + 4) / 3);',['4'],'Os parênteses produzem 12; 12 / 3 vale 4.'),
+ F('Encaixe as peças para calcular 18.','int x = _____ * _____;',['(2 + 4)','3','2 + 4','4'],['(2 + 4)','3'],'Os parênteses garantem que 2 + 4 seja calculado antes da multiplicação.'),
+ O('Ordene as etapas de cálculo de 2 + 3 * (4 + 1).',['Calcular 4 + 1','Multiplicar 3 * 5','Somar 2 + 15'],['Calcular 4 + 1','Multiplicar 3 * 5','Somar 2 + 15'],'Primeiro parênteses, depois multiplicação, por fim adição: resultado 17.')
+]);
+
+group('saida',[
+ C('Qual chamada exibe a variável idade como inteiro?','int idade = 19;',['printf("%d", idade);','printf("%f", idade);','printf("idade", %d);','printf(%d, idade);'],0,'%d é o especificador de saída para int.'),
+ C('O que a sequência \\n faz em uma string de printf?','printf("A\\nB");',['insere uma quebra de linha','imprime as letras barra e n','termina o programa','apaga a linha anterior'],0,'\\n cria uma nova linha na saída.'),
+ T('Digite exatamente o texto exibido, sem aspas.','int n = 3;\nprintf("Total: %d", n);',['Total: 3'],'O %d é substituído pelo valor de n.'),
+ F('Encaixe o formato para exibir duas casas decimais.','float preco = 7.5f;\nprintf("_____", preco);',['%.2f','%d','%c','%lf'],['%.2f'],'Em printf, %.2f mostra o valor com duas casas decimais.'),
+ M('Ligue cada especificador de saída ao dado.',[['%d','int'],['%f','float ou double'],['%c','char']], 'Em printf, float é promovido a double; ambos são exibidos com %f.')
+]);
+group('entrada',[
+ C('Qual chamada lê um inteiro para idade?','int idade;',['scanf("%d", &idade);','scanf("%f", idade);','scanf("%d", idade);','printf("%d", &idade);'],0,'scanf usa %d para int e recebe o endereço &idade.'),
+ C('Qual formato scanf usa para ler um double?','double medida;',['%d','%f','%lf','%c'],2,'Em scanf, %lf lê double; %f lê float.'),
+ T('Digite somente o especificador para ler um char com scanf.','char letra;\nscanf("___", &letra);',['%c'],'%c é o especificador de leitura de char.'),
+ F('Encaixe as peças para ler um float.','float valor;\nscanf("_____", _____valor);',['%f','&','%lf','*'],['%f','&'],'scanf usa %f e o endereço &valor para float.'),
+ M('Ligue o tipo ao formato de entrada em scanf.',[['int','%d'],['double','%lf'],['char','%c']], 'O especificador deve ser compatível com o tipo da variável.')
+]);
+group('erros_es',[
+ C('Qual correção é necessária?','int n;\nscanf("%d", n);',['Trocar n por &n','Trocar %d por %f','Remover as aspas','Usar printf'],0,'scanf precisa receber o endereço onde armazenará o valor: &n.'),
+ C('Qual correção torna a leitura compatível?','double media;\nscanf("%f", &media);',['Usar %lf','Remover &','Usar %c','Trocar double por char'],0,'scanf precisa de %lf para double.'),
+ B('Toque na linha que usa o especificador incorreto na saída.', ['int idade = 20;','printf("%f", idade);','printf("Fim");'],1,'Para exibir int com printf, use %d.'),
+ B('Toque na linha que contém o erro de endereço.', ['float preco;','scanf("%f", preco);','printf("%.2f", preco);'],1,'Para scanf preencher preco, passe &preco.'),
+ F('Encaixe a peça que corrige a leitura de um caractere após um número.','int n; char opcao;\nscanf("%d", &n);\nscanf("____", &opcao);',[' %c','%d','%f','%lf'],[' %c'],'O espaço antes de %c ignora a quebra de linha deixada pela leitura anterior.')
+]);
+
+group('if_else',[
+ C('Qual texto será exibido?','int x = 9;\nif (x > 5)\n    printf("A");\nelse\n    printf("B");',['A','B','AB','Nada'],0,'9 > 5 é verdadeiro: o primeiro ramo é executado.'),
+ C('Qual texto será exibido?','int x = 2;\nif (x == 3)\n    printf("Sim");\nelse\n    printf("Nao");',['Sim','Nao','SimNao','Erro'],1,'2 == 3 é falso; o else executa.'),
+ T('Digite somente a palavra exibida.','int idade = 16;\nif (idade >= 18)\n    printf("Maior");\nelse\n    printf("Menor");',['Menor'],'16 não satisfaz idade >= 18.'),
+ F('Encaixe a condição que libera entrada a partir de 18 anos.','if (idade _____ 18)\n    printf("Liberado");',['>=','==','<','!='],['>='],'>= inclui 18 e todas as idades maiores.'),
+ O('Ordene os blocos para exibir "Par" quando n for divisível por 2.', ['if (n % 2 == 0)', '    printf("Par");', 'else', '    printf("Impar");'],['if (n % 2 == 0)', '    printf("Par");', 'else', '    printf("Impar");'],'O if testa o resto; o else cobre os demais casos.'),
+ M('Associe cada valor de n ao resultado da condição. Zero e valores negativos entram no mesmo else.',[['n = 3','condição verdadeira'],['n = 0','condição falsa: zero'],['n = -2','condição falsa: negativo']], 'Somente valores maiores que zero entram no if. Tanto zero quanto valores negativos seguem para o mesmo else.', 'if (n > 0)\n    printf("Positivo");\nelse\n    printf("Nao positivo");')
+]);
+group('else_if',[
+ C('O que será exibido?','int nota = 8;\nif (nota >= 7)\n    printf("A");\nelse if (nota >= 5)\n    printf("R");\nelse\n    printf("F");',['A','R','F','AR'],0,'A primeira condição verdadeira é escolhida; 8 >= 7.'),
+ C('Por que este código classifica 8 incorretamente?','if (nota >= 5)\n    printf("Recuperacao");\nelse if (nota >= 7)\n    printf("Aprovado");',['A condição >= 5 vem antes de >= 7','Falta um switch','Deveria usar %f','O else if executa sempre'],0,'A primeira condição já captura 8. Teste a faixa mais alta primeiro.'),
+ T('Digite apenas a letra exibida.','int x = 0;\nif (x > 0)\n    printf("P");\nelse if (x < 0)\n    printf("N");\nelse\n    printf("Z");',['Z'],'Zero não é positivo nem negativo; o else imprime Z.'),
+ F('A = aprovado (nota 7 ou maior); R = recuperação (de 5 até menos de 7); F = reprovado (abaixo de 5). Complete o else if considerando que a primeira condição já foi testada.','if (nota >= 7)\n    printf("A");\nelse if (nota _____ 5)\n    printf("R");\nelse\n    printf("F");',['>=','<','==','!='],['>='],'O else if só é avaliado se nota >= 7 for falso. Por isso, nesse ramo nota já é menor que 7; nota >= 5 seleciona exatamente a faixa de 5 a menos de 7. Nota 5 ou 6 imprime R; nota 7 imprime A.'),
+ O('Ordene as condições da maior faixa para a menor.', ['if (nota >= 7)', 'else if (nota >= 5)', 'else'],['if (nota >= 7)', 'else if (nota >= 5)', 'else'],'Testar a maior faixa primeiro evita que uma condição ampla capture as notas altas.'),
+ M('Ligue a nota ao resultado para faixas >=7, >=5 e demais.',[['8','Aprovado'],['6','Recuperacao'],['3','Reprovado']], 'As faixas são avaliadas em ordem; apenas um ramo executa.')
+]);
+group('switch',[
+ C('Qual texto será exibido?','int opcao = 2;\nswitch (opcao) {\n    case 1:\n        printf("A");\n        break;\n    case 2:\n        printf("B");\n        break;\n    default:\n        printf("X");\n}',['A','B','X','AB'],1,'O valor 2 seleciona case 2, que termina com break.'),
+ C('Quando o ramo default executa?','int opcao = 3;\nswitch (opcao) {\n    case 1:\n        printf("Um");\n        break;\n    default:\n        printf("Outro");\n}',['Quando nenhum case corresponde','Sempre antes dos cases','Somente quando opcao é zero','Nunca'],0,'default cobre valores sem case correspondente; com opcao igual a 3, este exemplo exibe Outro.'),
+ T('Digite somente o texto exibido.','int op = 9;\nswitch (op) {\n    case 1:\n        printf("Um");\n        break;\n    default:\n        printf("Outro");\n}',['Outro'],'9 não corresponde ao case 1, então executa default.'),
+ F('Encaixe a peça que encerra o case antes do próximo.', 'int op = 1;\nswitch (op) {\n    case 1:\n        printf("Um");\n        _____;\n    case 2:\n        printf("Dois");\n        break;\n}', ['break','continue','else','return 2'],['break'],'break sai do switch e evita a execução do case seguinte.'),
+ O('Ordene os blocos de um switch válido.', ['int op = 1;\nswitch (op) {','    case 1:\n        printf("Um");\n        break;','    default:\n        printf("Outro");','}'],['int op = 1;\nswitch (op) {','    case 1:\n        printf("Um");\n        break;','    default:\n        printf("Outro");','}'],'O exemplo declara op, inclui case e default e fecha o bloco. Em uma execução com op igual a 1, exibe Um.'),
+ M('Ligue cada valor de op ao texto exibido. Considere uma execução separada para cada valor.',[['op = 1','Um'],['op = 2','Dois'],['op = 3','Outro']], 'O valor seleciona o case correspondente ou default.', 'int op = 1; /* altere para 2 ou 3 em cada execução */\nswitch (op) {\n    case 1:\n        printf("Um");\n        break;\n    case 2:\n        printf("Dois");\n        break;\n    default:\n        printf("Outro");\n}')
+]);
+group('erros_dec',[
+ C('Qual erro lógico pode ocorrer aqui?','if (ativo = 1)\n    printf("Sim");',['Atribuição no lugar da comparação','Falta o operador &','Falta o especificador %d','O printf deve estar no else'],0,'Atribuir 1 torna a condição verdadeira; para comparar, use ==.'),
+ C('Por que este trecho pode imprimir B mesmo quando x > 0?','if (x > 0);\n    printf("B");',['O ponto e vírgula encerra o if','Falta um break','x deveria ser char','printf não funciona em if'],0,'O ; forma um comando vazio; printf fica fora da condição.'),
+ B('Toque no bloco que usa atribuição em vez de comparação.', ['int acesso = 0;','if (acesso = 1)\n    printf("Entrar");','else\n    printf("Aguardar");'],1,'Use acesso == 1 para testar o valor sem modificá-lo.'),
+ B('Toque na linha com ponto e vírgula que encerra o if.', ['int x = 4;','if (x > 0);','printf("Positivo");'],1,'Remova o ; depois da condição para vincular printf ao if.'),
+ F('Encaixe a peça para evitar que case 1 caia em case 2.','int op = 1;\nswitch (op) {\n    case 1:\n        printf("A");\n        _____;\n    case 2:\n        printf("B");\n        break;\n}',['break','default','else','&&'],['break'],'break encerra o switch após o primeiro case.'),
+ O('Ordene os testes para classificar 8 como aprovado.', ['if (nota >= 7)\n    printf("Aprovado");','else if (nota >= 5)\n    printf("Recuperacao");','else\n    printf("Reprovado");'],['if (nota >= 7)\n    printf("Aprovado");','else if (nota >= 5)\n    printf("Recuperacao");','else\n    printf("Reprovado");'],'A faixa superior precisa ser testada antes da faixa mais ampla.')
+]);
+</script>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s), map=$('#map'), ctx=map.getContext('2d');
+const STAGES=[
+ {name:'Tipos de dados',scene:'Arquivo central',groups:['int','float','double','char'],draw:1,color:'#54dcef',bg:'#071b2b',wall:'#173d54',label:'Identifique int, float, double e char',story:'Os registros do campus perderam seus formatos. Recupere os tipos para que cada dado volte ao seu lugar.',badge:'Guardião dos dados',restored:'Os registros voltaram a ser lidos corretamente.'},
+ {name:'Operadores',scene:'Reator de cálculo',groups:['aritmeticos','atribuicao','relacionais','logicos','incremento','precedencia'],draw:2,color:'#ffd16b',bg:'#251a15',wall:'#65452c',label:'Calcule e construa expressões em C',story:'O reator precisa de expressões corretas para distribuir energia aos demais setores.',badge:'Mestre das expressões',restored:'A energia está fluindo pelos circuitos.'},
+ {name:'Saída de dados',scene:'Painel de comunicação',groups:['saida'],draw:2,color:'#d2a6ff',bg:'#1a1730',wall:'#4e3b70',label:'Controle a saída com printf',story:'Os painéis estão escuros. Use printf para devolver informações legíveis ao campus.',badge:'Voz do sistema',restored:'Os painéis voltaram a mostrar mensagens.'},
+ {name:'Entrada de dados',scene:'Console de entrada',groups:['entrada'],draw:2,color:'#8de6c9',bg:'#0b2423',wall:'#285d58',label:'Leia valores com scanf',story:'Os consoles deixaram de receber comandos. Restaure a leitura de dados com scanf.',badge:'Operador de console',restored:'Os consoles estão recebendo dados novamente.'},
+ {name:'Erros de entrada e saída',scene:'Oficina de diagnóstico',groups:['erros_es'],draw:2,color:'#ff9c83',bg:'#281b20',wall:'#68404a',label:'Encontre e corrija falhas de leitura e saída',story:'Algumas mensagens ainda falham. Localize os erros antes de religar a rede.',badge:'Caçador de falhas',restored:'Os erros de entrada e saída foram isolados.'},
+ {name:'Estruturas de decisão',scene:'Central de decisões',groups:['if_else','else_if','switch','erros_dec'],draw:3,color:'#b3ef7a',bg:'#15251b',wall:'#426142',label:'Escolha caminhos com if, else if e switch',story:'O controle de acesso aguarda suas decisões. Recupere if, else if e switch para finalizar a missão.',badge:'Arquiteto de decisões',restored:'As rotas do campus estão novamente sob controle.'}
+];
+const COUNTS=STAGES.map(s=>s.groups.length*s.draw), TOTAL=COUNTS.reduce((a,b)=>a+b,0), STORE='clab-inicial-v1', RANKING_STORE='clab-ranking-v1';
+function newRunId(){return typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`}
+const byId=Object.fromEntries(Object.values(BANK).flat().map(q=>[q.id,q]));
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function isInteractive(q){return ['match','binary','fill','order','bug'].includes(q.kind)}
+function makeRun(){
+ const targets=[1,3,0,0,0,4]; // 2 mecânicas nos três setores de E/S, distribuídas abaixo.
+ const ioTargets=shuffle([2,3,4]).slice(0,2);ioTargets.forEach(i=>targets[i]=1);
+ const typeGroup=shuffle(STAGES[0].groups)[0];
+ const opGroups=shuffle(STAGES[1].groups).slice(0,3);
+ const ids=STAGES.map((stage,si)=>{
+   const forced=si===0?[typeGroup]:si===1?opGroups:si===5?stage.groups:si>=2&&si<=4&&targets[si]?[stage.groups[0]]:[];
+   const picks=stage.groups.flatMap(g=>{
+     const pool=shuffle(BANK[g]);const chosen=[];
+     if(forced.includes(g))chosen.push(shuffle(pool.filter(isInteractive))[0]);
+     chosen.push(...shuffle(pool.filter(q=>!isInteractive(q))).slice(0,stage.draw-chosen.length));
+     return chosen;
+   });
+   return shuffle(picks).map(q=>q.id);
+ });
+ return {id:newRunId(),ids,stage:0,index:0,score:0,correct:0,stageCorrect:Array(6).fill(0),badges:[],name:'',elapsedMs:0,atPortal:false,player:{x:68,y:430},started:false,finished:false};
+}
+let run;
+try{const saved=JSON.parse(localStorage.getItem(STORE));if(saved&&Array.isArray(saved.ids)&&saved.ids.length===6&&saved.ids.every((arr,i)=>arr.length===COUNTS[i]&&arr.every(id=>byId[id]))&&Number.isInteger(saved.stage)&&saved.stage>=0&&saved.stage<6&&Number.isInteger(saved.index)&&saved.index>=0&&saved.index<=COUNTS[saved.stage]&&Array.isArray(saved.stageCorrect)&&saved.stageCorrect.length===6){run=saved}}catch(e){}
+if(!run)run=makeRun();
+if(!Array.isArray(run.badges))run.badges=STAGES.slice(0,run.finished?STAGES.length:run.stage).map((_,i)=>i);
+if(typeof run.name!=='string')run.name=run.started?'Jogador':'';
+if(!Number.isFinite(run.elapsedMs)||run.elapsedMs<0)run.elapsedMs=0;
+if(typeof run.id!=='string'||!run.id)run.id=newRunId();
+const keys=new Set();let active=null, selection=null, responded=false, last=performance.now();
+let timerAnchor=null;
+function elapsed(){return run.elapsedMs+(timerAnchor===null?0:Math.max(0,Date.now()-timerAnchor))}
+function formatTime(ms){const seconds=Math.floor(Math.max(0,ms)/1000),h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),s=seconds%60;return [h,m,s].map(x=>String(x).padStart(2,'0')).join(':')}
+function updateTime(){$('#timeLabel').textContent=formatTime(elapsed())}
+function pauseTimer(){if(timerAnchor!==null){run.elapsedMs=elapsed();timerAnchor=null}updateTime()}
+function resumeTimer(){if(run.started&&!run.finished&&$('#welcome').hidden&&document.visibilityState!=='hidden'&&timerAnchor===null)timerAnchor=Date.now();updateTime()}
+let soundEnabled=true,audioContext=null;
+try{soundEnabled=localStorage.getItem('clab-sound')!=='off'}catch(e){}
+function soundButton(){const b=$('#soundToggle');b.textContent=soundEnabled?'🔊 Som ligado':'🔇 Som desligado';b.setAttribute('aria-pressed',String(soundEnabled))}
+function playSound(kind){if(!soundEnabled)return;try{
+ const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;
+ if(!audioContext)audioContext=new Audio();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+ const notes={start:[440,660],select:[520],correct:[523,659,784],wrong:[330,247],portal:[392,523,659,784],finish:[392,523,659,784,1047]}[kind]||[];
+ const start=audioContext.currentTime;
+ notes.forEach((frequency,i)=>{const osc=audioContext.createOscillator(),gain=audioContext.createGain(),at=start+i*.105;
+  osc.type=kind==='wrong'?'triangle':'sine';osc.frequency.setValueAtTime(frequency,at);
+  gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(kind==='select'?.035:.075,at+.015);gain.gain.exponentialRampToValueAtTime(.0001,at+.16);
+  osc.connect(gain);gain.connect(audioContext.destination);osc.start(at);osc.stop(at+.17)
+ })
+}catch(e){/* O jogo permanece funcional quando áudio é bloqueado pelo navegador. */}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify({...run,elapsedMs:elapsed()}))}catch(e){}}
+function rankingOrder(a,b){return b.score-a.score||a.elapsedMs-b.elapsedMs||a.date-b.date}
+function readRanking(){try{const saved=JSON.parse(localStorage.getItem(RANKING_STORE));return Array.isArray(saved)?saved.filter(e=>e&&typeof e.id==='string'&&typeof e.name==='string'&&Number.isFinite(e.score)&&Number.isFinite(e.correct)&&Number.isFinite(e.elapsedMs)&&Number.isFinite(e.date)).sort(rankingOrder).slice(0,15):[]}catch(e){return []}}
+function recordRanking(){const board=readRanking();if(!board.some(e=>e.id===run.id)){
+ board.push({id:run.id,name:run.name.trim().slice(0,24)||'Jogador',score:run.score,correct:run.correct,elapsedMs:run.elapsedMs,date:Date.now()});
+ board.sort(rankingOrder);try{localStorage.setItem(RANKING_STORE,JSON.stringify(board.slice(0,15)))}catch(e){}
+}}
+function showRanking(){const entries=readRanking(),list=$('#rankingList');list.replaceChildren();
+ if(!entries.length)list.append(element('p','Ainda não há partidas concluídas neste navegador.','rank-empty'));
+ entries.forEach((entry,i)=>{const row=element('div',null,'rank-row'+(entry.id===run.id?' current':''));
+  row.append(element('span',`${i+1}º`,'rank-position'),element('strong',entry.name,'rank-name'),element('span',`${entry.score} XP`,'rank-score'),element('span',`${entry.correct}/${TOTAL} acertos`,'rank-correct'),element('span',formatTime(entry.elapsedMs),'rank-time'));
+  list.append(row)});
+ $('#ranking').hidden=false;$('#backToResult').focus()
+}
+function stage(){return STAGES[run.stage]}
+function completedCount(){return run.ids.slice(0,run.stage).reduce((n,a)=>n+a.length,0)+run.index}
+function refresh(){
+ $('#stageCount').textContent=`${run.stage+1}/6`;$('#hits').textContent=`${run.correct}/${TOTAL}`;$('#xp').textContent=run.score;
+ $('#playerDisplay').hidden=!run.started;$('#playerLabel').textContent=run.name;updateTime();
+ $('#mapLabel').textContent=stage().scene;$('#sectorTitle').textContent=`${stage().scene} · ${stage().name}`;
+ $('#story').textContent=stage().story;
+ $('#objective').textContent=run.atPortal?'Setor completo. Alcance o portal verde à direita.':stage().label+'. Caminhe até o terminal azul.';
+ $('#sectorProgress').textContent=`${run.index}/${COUNTS[run.stage]} desafios deste setor`;
+ $('#meter').style.width=`${completedCount()/TOTAL*100}%`;
+ $('#badgeTitle').textContent=`Insígnias ${run.badges.length}/6`;
+ $('#badges').replaceChildren(...(run.badges.length?run.badges.map(i=>{const badge=element('span',`✦ ${STAGES[i].badge}`,'badge-chip');badge.style.setProperty('--badge-color',STAGES[i].color);return badge}):[element('span','Restaure um setor para conquistar a primeira.','badge-empty')]));
+ $('#sectors').replaceChildren(...STAGES.map((s,i)=>{const d=document.createElement('div');d.className='sector '+(i<run.stage?'done':i===run.stage?'active':'');d.textContent=`${i<run.stage?'✓':i===run.stage?'▸':'○'} ${s.name} · ${COUNTS[i]}`;return d}));
+}
+function normalize(v){return String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().replace(/\s+/g,' ').toLocaleLowerCase('pt-BR')}
+const response=$('#response');
+response.addEventListener('click',e=>{if(e.target.closest('button'))playSound('select')});
+response.addEventListener('change',e=>{if(e.target.matches('select'))playSound('select')});
+function element(tag,text,cls){const el=document.createElement(tag);if(text!==null)el.textContent=text;if(cls)el.className=cls;return el}
+function renderChoice(q){selection=null;shuffle(q.options.map((x,i)=>({x,i}))).forEach(({x,i})=>{let b=element('button',x,'option');b.type='button';b.onclick=()=>{response.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selection=i};response.append(b)})}
+function renderText(){const input=element('input',null,'field');input.type='text';input.autocomplete='off';input.spellcheck=false;input.setAttribute('aria-label','Digite a resposta');input.placeholder='Digite sua resposta';input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!responded)check()});response.append(input)}
+function renderMatch(q){
+ const choices=shuffle(q.pairs.map(p=>p[1]));const box=element('div',null,'pairs');
+ q.pairs.forEach(([left],i)=>{const row=element('div',null,'pair');const label=element('label',left);const select=element('select');select.setAttribute('aria-label',`Associe ${left}`);select.append(element('option','Selecione…'));select.options[0].value='';choices.forEach(c=>{const opt=element('option',c);opt.value=c;select.append(opt)});row.append(label,select);box.append(row)});response.append(box)
+}
+function renderBinary(q){
+ const box=element('div',null,'pairs');
+ q.items.forEach(([expression])=>{const row=element('div',null,'pair');const label=element('label',expression);const select=element('select');select.setAttribute('aria-label',`Resultado de ${expression}`);
+  for(const [value,text] of [['','Selecione 0 ou 1'],['0','0'],['1','1']]){const option=element('option',text);option.value=value;select.append(option)}
+  row.append(label,select);box.append(row)});response.append(box)
+}
+function renderFill(q){selection=[];const target=element('div','Toque nas peças na ordem das lacunas','slot');target.setAttribute('aria-live','polite');const pieces=element('div',null,'chips');shuffle(q.pieces.map((p,i)=>({p,i}))).forEach(({p,i})=>{const b=element('button',p,'piece');b.type='button';b.onclick=()=>{if(b.disabled)return;b.disabled=true;selection.push({p,i,button:b});target.textContent=selection.map(x=>x.p).join('   ·   ');};pieces.append(b)});const undo=element('button','Desfazer última peça','secondary');undo.type='button';undo.onclick=()=>{const x=selection.pop();if(x)x.button.disabled=false;target.textContent=selection.map(x=>x.p).join('   ·   ')||'Toque nas peças na ordem das lacunas'};response.append(target,pieces,undo)}
+function renderOrder(q){selection=shuffle(q.pieces);if(selection.every((v,i)=>v===q.answer[i]))selection.reverse();const list=element('div',null,'answers');function paint(){list.replaceChildren();selection.forEach((s,i)=>{const row=element('div',null,'order-row');const c=element('code',s);const up=element('button','↑','move'),down=element('button','↓','move');up.type=down.type='button';up.setAttribute('aria-label',`Mover linha ${i+1} para cima`);down.setAttribute('aria-label',`Mover linha ${i+1} para baixo`);up.disabled=i===0;down.disabled=i===selection.length-1;up.onclick=()=>{[selection[i-1],selection[i]]=[selection[i],selection[i-1]];paint()};down.onclick=()=>{[selection[i+1],selection[i]]=[selection[i],selection[i+1]];paint()};row.append(c,up,down);list.append(row)})}paint();response.append(list)}
+function renderBug(q){selection=null;q.lines.forEach((line,i)=>{const b=element('button',`${i+1}. ${line}`,'line');b.type='button';b.setAttribute('aria-pressed','false');b.onclick=()=>{response.querySelectorAll('.line').forEach(x=>{x.classList.remove('selected');x.setAttribute('aria-pressed','false')});b.classList.add('selected');b.setAttribute('aria-pressed','true');selection=i};response.append(b)})}
+function question(){active=byId[run.ids[run.stage][run.index]];responded=false;selection=null;
+ $('#topic').textContent=`${stage().name} · ${run.index+1}/${COUNTS[run.stage]}`;
+ $('#title').textContent=({choice:'Escolha a resposta',text:'Escreva a resposta',match:'Faça as ligações',binary:'Escolha 0 ou 1',fill:'Encaixe as peças',order:'Organize a sequência',bug:'Encontre o erro'})[active.kind];
+ $('#prompt').textContent=active.prompt;$('#code').textContent=active.code||'';$('#code').hidden=!active.code;
+ $('#feedback').hidden=true;$('#feedback').textContent='';$('#check').textContent='Verificar';response.replaceChildren();
+ ({choice:renderChoice,text:renderText,match:renderMatch,binary:renderBinary,fill:renderFill,order:renderOrder,bug:renderBug})[active.kind](active);
+ $('#challenge').hidden=false;$('#check').focus();save();
+}
+function evaluate(q){
+ if(q.kind==='choice'||q.kind==='bug')return selection===null?null:selection===q.answer;
+ if(q.kind==='text'){let value=response.querySelector('input').value;if(!value.trim())return null;return q.answers.some(x=>normalize(x)===normalize(value))}
+ if(q.kind==='match'){const vals=[...response.querySelectorAll('select')].map(e=>e.value);if(vals.some(v=>!v))return null;return vals.every((v,i)=>v===q.pairs[i][1])}
+ if(q.kind==='binary'){const vals=[...response.querySelectorAll('select')].map(e=>e.value);if(vals.some(v=>v===''))return null;return vals.every((v,i)=>Number(v)===q.items[i][1])}
+ if(q.kind==='fill'){if(selection.length<q.answer.length)return null;return selection.length===q.answer.length&&selection.every((v,i)=>v.p===q.answer[i])}
+ if(q.kind==='order')return selection.every((v,i)=>v===q.answer[i]);
+}
+function correctDescription(q){if(q.kind==='choice')return q.options[q.answer];if(q.kind==='bug')return `Linha ${q.answer+1}: ${q.lines[q.answer]}`;if(q.kind==='text')return q.answers[0];if(q.kind==='match')return q.pairs.map(p=>`${p[0]} → ${p[1]}`).join('; ');if(q.kind==='binary')return q.items.map(p=>`${p[0]} → ${p[1]}`).join('; ');return q.answer.join('  →  ')}
+function check(){if(responded)return;const right=evaluate(active);if(right===null){$('#feedback').textContent='Complete a resposta antes de verificar.';$('#feedback').hidden=false;return}
+ responded=true;if(right){run.correct++;run.stageCorrect[run.stage]++;run.score+=100}else run.score+=20;
+ playSound(right?'correct':'wrong');
+ const correct=correctDescription(active);$('#feedback').textContent=`${right?'Correto!':'Resposta esperada: '+correct+'.'} ${active.why}`;$('#feedback').hidden=false;
+ [...response.querySelectorAll('button, input, select')].forEach(el=>el.disabled=true);
+ if(active.kind==='choice')response.querySelectorAll('.option').forEach(el=>{if(el.textContent===correct)el.classList.add('correct');else if(el.classList.contains('selected')&&!right)el.classList.add('wrong')});
+ $('#check').textContent=run.index+1===COUNTS[run.stage]?'Ir ao portal':'Próximo desafio';
+ run.index++;run.atPortal=run.index===COUNTS[run.stage];refresh();save();
+ $('#check').focus()
+}
+function next(){if($('#challenge').hidden)return;$('#challenge').hidden=true;active=null;if(!run.atPortal){question()}else{map.focus();refresh()}}
+function nextStage(){const completed=run.stage;
+ if(!run.badges.includes(completed)){run.badges.push(completed);run.score+=150}
+ if(completed===STAGES.length-1){refresh();finish();return}
+ run.stage++;run.index=0;run.atPortal=false;run.player={x:68,y:430};refresh();save();
+ const s=STAGES[completed];$('#milestone').style.setProperty('--stage-accent',s.color);
+ $('#milestoneTitle').textContent=s.badge;$('#milestoneText').textContent=`${run.name}, ${s.restored.toLowerCase()} Próximo destino: ${stage().scene}.`;
+ $('#rewardText').textContent='Insígnia conquistada · +150 XP';$('#milestone').hidden=false;playSound('portal');$('#continueStage').focus()
+}
+function celebrate(){const box=$('#confetti');box.replaceChildren();if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+ for(let i=0;i<30;i++){const sparkle=element('i',i%3===0?'◆':'✦');sparkle.style.setProperty('--x',`${(i*37)%100}%`);sparkle.style.setProperty('--color',STAGES[i%6].color);sparkle.style.setProperty('--size',`${13+(i%4)*5}px`);sparkle.style.setProperty('--delay',`${(i%9)*-.31}s`);sparkle.style.setProperty('--duration',`${2.7+(i%5)*.42}s`);sparkle.style.setProperty('--drift',`${(i%2?1:-1)*(35+i%7*12)}px`);box.append(sparkle)}
+}
+function finish(){const firstCompletion=!run.finished;pauseTimer();run.finished=true;recordRanking();$('#summary').textContent=`${run.name}, você restaurou os seis sistemas do campus, conquistou ${run.badges.length} insígnias, acertou ${run.correct} de ${TOTAL} desafios e somou ${run.score} XP. Use os resultados abaixo para escolher o que revisar.`;
+ $('#finalTime').textContent=formatTime(run.elapsedMs);
+ $('#results').replaceChildren(...STAGES.map((s,i)=>{const d=element('div');const strong=element('strong',`${run.stageCorrect[i]}/${COUNTS[i]}`);d.append(strong,element('span',s.name));return d}));celebrate();$('#finish').hidden=false;save();if(firstCompletion)playSound('finish');$('#restart').focus()}
+const walls=[{x:0,y:0,w:960,h:28},{x:0,y:512,w:960,h:28},{x:0,y:0,w:28,h:540},{x:932,y:0,w:28,h:540},{x:350,y:28,w:24,h:168},{x:350,y:320,w:24,h:192},{x:640,y:28,w:24,h:170},{x:640,y:330,w:24,h:182}];
+const terminal={x:205,y:256,w:50,h:48},portal={x:850,y:246,w:45,h:70};
+function drawScene(t){const s=stage(),i=run.stage;ctx.fillStyle=s.bg;ctx.fillRect(0,0,960,540);ctx.save();ctx.globalAlpha=.22;ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.lineWidth=3;
+ if(i===0){for(let x=80;x<900;x+=145){ctx.strokeRect(x,115,86,96);for(let y=132;y<198;y+=23){ctx.fillRect(x+12,y,48,6);ctx.fillRect(x+70,y,6,6)}}}
+ if(i===1){for(let radius=58;radius<=165;radius+=35){ctx.beginPath();ctx.arc(485,267,radius,0,Math.PI*2);ctx.stroke()}ctx.globalAlpha=.12+.06*Math.sin(t/220);ctx.beginPath();ctx.arc(485,267,55,0,Math.PI*2);ctx.fill()}
+ if(i===2){for(let x=95;x<=740;x+=285){ctx.strokeRect(x,108,185,112);for(let y=130;y<=183;y+=17)ctx.fillRect(x+18,y,95+(y%3)*9,5)}}
+ if(i===3){for(let row=0;row<4;row++)for(let col=0;col<9;col++)ctx.strokeRect(390+col*25,143+row*25,17,16);for(let r=45;r<=150;r+=35){ctx.beginPath();ctx.arc(499,382,r,Math.PI*1.1,Math.PI*1.9);ctx.stroke()}}
+ if(i===4){for(let x=40;x<930;x+=48){ctx.beginPath();ctx.moveTo(x,98);ctx.lineTo(x+26,70);ctx.stroke()}ctx.globalAlpha=.1;ctx.fillRect(30+(t/12)%900,105,22,330)}
+ if(i===5){const origin=[478,275];for(const end of [[390,120],[565,120],[390,425],[565,425]]){ctx.beginPath();ctx.moveTo(...origin);ctx.lineTo(...end);ctx.stroke();ctx.beginPath();ctx.arc(...end,12,0,Math.PI*2);ctx.fill()}ctx.beginPath();ctx.arc(...origin,25,0,Math.PI*2);ctx.stroke()}
+ ctx.restore()}
+function overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function move(dx,dy,dt){if($('#welcome').hidden===false||$('#challenge').hidden===false||$('#milestone').hidden===false||$('#finish').hidden===false)return;
+ const p=run.player,box=()=>({x:p.x,y:p.y,w:27,h:30}),ox=p.x,oy=p.y;p.x+=dx*210*dt;if(walls.some(w=>overlap(box(),w)))p.x=ox;p.y+=dy*210*dt;if(walls.some(w=>overlap(box(),w)))p.y=oy;
+ if(!run.atPortal&&overlap(box(),terminal))question();else if(run.atPortal&&overlap(box(),portal))nextStage();
+}
+function draw(t){const c=stage().color;drawScene(t);ctx.save();ctx.strokeStyle=c;ctx.globalAlpha=.14;ctx.lineWidth=1;for(let x=28;x<932;x+=36){ctx.beginPath();ctx.moveTo(x,28);ctx.lineTo(x,512);ctx.stroke()}for(let y=28;y<512;y+=36){ctx.beginPath();ctx.moveTo(28,y);ctx.lineTo(932,y);ctx.stroke()}ctx.restore();
+ walls.forEach(w=>{ctx.fillStyle=stage().wall;ctx.fillRect(w.x,w.y,w.w,w.h);ctx.strokeStyle=c;ctx.globalAlpha=.42;ctx.strokeRect(w.x+.5,w.y+.5,w.w-1,w.h-1);ctx.globalAlpha=1});
+ ctx.font='700 21px system-ui';ctx.fillStyle=c;ctx.fillText(`SETOR 0${run.stage+1} · ${stage().scene.toUpperCase()}`,395,86);
+ ctx.save();ctx.shadowColor=c;ctx.shadowBlur=run.atPortal?0:16+5*Math.sin(t/250);ctx.fillStyle=run.atPortal?'#315262':c;ctx.fillRect(terminal.x,terminal.y,terminal.w,terminal.h);ctx.restore();ctx.fillStyle='#061521';ctx.fillRect(terminal.x+8,terminal.y+9,34,21);ctx.fillStyle='#d9fbff';ctx.font='bold 13px monospace';ctx.fillText(run.atPortal?'OK':'C >',terminal.x+12,terminal.y+25);
+ ctx.save();ctx.shadowColor='#b3ef7a';ctx.shadowBlur=run.atPortal?25:0;ctx.fillStyle=run.atPortal?'#b3ef7a':'#35536a';ctx.fillRect(portal.x,portal.y,portal.w,portal.h);ctx.fillStyle='#071521';ctx.fillRect(portal.x+9,portal.y+8,portal.w-18,portal.h-16);ctx.restore();
+ const p=run.player;ctx.save();ctx.shadowColor=c;ctx.shadowBlur=11;ctx.fillStyle=c;ctx.fillRect(p.x,p.y+7,27,18);ctx.fillStyle='#e2fcff';ctx.fillRect(p.x+4,p.y,19,8);ctx.fillStyle='#061521';ctx.fillRect(p.x+5,p.y+12,4,4);ctx.fillRect(p.x+18,p.y+12,4,4);ctx.fillStyle='#7ca5b9';ctx.fillRect(p.x+3,p.y+25,7,5);ctx.fillRect(p.x+17,p.y+25,7,5);ctx.restore();requestAnimationFrame(draw)}
+function loop(t){const dt=Math.min(.035,(t-last)/1000);last=t;let dx=0,dy=0;if(keys.has('ArrowLeft')||keys.has('a'))dx--;if(keys.has('ArrowRight')||keys.has('d'))dx++;if(keys.has('ArrowUp')||keys.has('w'))dy--;if(keys.has('ArrowDown')||keys.has('s'))dy++;if(dx&&dy){dx*=.707;dy*=.707}move(dx,dy,dt);requestAnimationFrame(loop)}
+window.addEventListener('keydown',e=>{if(!$('#challenge').hidden||!$('#welcome').hidden||!$('#milestone').hidden||!$('#finish').hidden)return;let k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(k)){e.preventDefault();keys.add(k)}});
+window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',()=>keys.clear());
+document.querySelectorAll('.pad button').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(k)});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys.delete(k))});
+$('#start').onclick=()=>{const name=$('#playerName').value.trim().replace(/\s+/g,' ').slice(0,24);if(!name){$('#nameError').hidden=false;$('#playerName').focus();return}
+ run.name=name;run.started=true;$('#nameError').hidden=true;$('#welcome').hidden=true;resumeTimer();playSound('start');if(run.index>0&&!run.atPortal)question();refresh();save();map.focus()};
+$('#playerName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#start').click()});
+$('#soundToggle').onclick=()=>{soundEnabled=!soundEnabled;try{localStorage.setItem('clab-sound',soundEnabled?'on':'off')}catch(e){}soundButton();if(soundEnabled)playSound('select')};
+$('#continueStage').onclick=()=>{$('#milestone').hidden=true;playSound('select');map.focus()};
+$('#check').onclick=()=>{if(responded)next();else check()};
+$('#viewRanking').onclick=showRanking;
+$('#backToResult').onclick=()=>{$('#ranking').hidden=true;$('#viewRanking').focus()};
+$('#restart').onclick=()=>{pauseTimer();try{localStorage.removeItem(STORE)}catch(e){}run=makeRun();$('#ranking').hidden=true;$('#finish').hidden=true;$('#milestone').hidden=true;$('#confetti').replaceChildren();$('#playerName').value='';$('#start').textContent='Iniciar missão';$('#nameError').hidden=true;refresh();$('#welcome').hidden=false;$('#playerName').focus()};
+soundButton();
+refresh();if(run.finished){$('#welcome').hidden=true;finish()}else{
+ $('#welcome').hidden=false;$('#playerName').value=run.name==='Jogador'?'':run.name;
+ $('#start').textContent=run.started?'Continuar missão':'Iniciar missão';$('#playerName').focus();
+ if(run.started&&run.index>0&&!run.atPortal){ /* Retoma a questão interrompida depois que o jogador confirma o nome. */ run.player={x:68,y:430};save()}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){pauseTimer();save()}else resumeTimer()});
+window.addEventListener('pagehide',()=>{pauseTimer();save()});window.addEventListener('pageshow',resumeTimer);
+setInterval(updateTime,1000);
+requestAnimationFrame(draw);requestAnimationFrame(loop);
+})();
+</script>
+
