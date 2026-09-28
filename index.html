@@ -22,6 +22,7 @@
 .bar{flex-wrap:wrap}
 .sound-toggle{border:1px solid #4e7488;border-radius:999px;background:#143348;color:var(--text);padding:7px 12px;font-size:.82rem;white-space:nowrap}
 .sound-toggle:hover,.sound-toggle:focus-visible{border-color:var(--cyan)}
+.ranking-toggle[hidden]{display:none}.welcome-ranking{display:block;width:100%;margin:8px 0 10px;font-weight:800}
 .name-label{display:block;margin:15px 0 6px;font-weight:700;color:var(--cyan)}
 #playerName{margin-bottom:12px}
 .name-error{color:var(--red);font-size:.85rem;margin:0 0 10px!important}
@@ -259,7 +260,7 @@ function playSound(kind){if(!soundEnabled)return;try{
 function save(){try{localStorage.setItem(STORE,JSON.stringify({...run,elapsedMs:elapsed()}))}catch(e){}}
 function rankingOrder(a,b){return b.score-a.score||a.elapsedMs-b.elapsedMs||a.date-b.date}
 function readRanking(){try{const saved=JSON.parse(localStorage.getItem(RANKING_STORE));return Array.isArray(saved)?saved.filter(e=>e&&typeof e.id==='string'&&typeof e.name==='string'&&Number.isFinite(e.score)&&Number.isFinite(e.correct)&&Number.isFinite(e.elapsedMs)&&Number.isFinite(e.date)).sort(rankingOrder).slice(0,15):[]}catch(e){return []}}
-let rankingFrameReady=false,rankingFrameStarted=false;const rankingReadyWaiters=[],rankingRequests=new Map();
+let rankingFrameReady=false,rankingFrameStarted=false,rankingReturnFocus=null,rankingContext='game';const rankingReadyWaiters=[],rankingRequests=new Map();
 function rankingConfigured(){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(RANKING_BRIDGE_URL)&&!RANKING_BRIDGE_URL.includes('COLE_')}
 function setupRankingBridge(){if(!rankingConfigured()||rankingFrameStarted)return;rankingFrameStarted=true;$('#rankingBridge').src=RANKING_BRIDGE_URL}
 function waitRankingBridge(){setupRankingBridge();if(rankingFrameReady)return Promise.resolve();return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('O servidor do ranking não respondeu.')),9000);rankingReadyWaiters.push(()=>{clearTimeout(timer);resolve()})})}
@@ -284,14 +285,17 @@ function renderRanking(entries){const list=$('#rankingList');list.replaceChildre
   row.append(element('span',`${i+1}º`,'rank-position'),element('strong',entry.name,'rank-name'),element('span',`${entry.score} XP`,'rank-score'),element('span',`${entry.correct}/${TOTAL} acertos`,'rank-correct'),element('span',formatTime(entry.elapsedMs),'rank-time'));
   list.append(row)});
 }
-async function showRanking(){const status=document.querySelector('.ranking-note');$('#ranking').hidden=false;status.textContent=rankingConfigured()?'Carregando ranking geral…':'Ranking geral ainda não configurado; mostrando resultados deste navegador.';renderRanking(readRanking());$('#backToResult').focus();
+async function showRanking(){const status=document.querySelector('.ranking-note'),close=$('#backToResult');rankingReturnFocus=document.activeElement;
+ rankingContext=!$('#finish').hidden?'result':!$('#welcome').hidden?'welcome':!$('#challenge').hidden?'challenge':!$('#milestone').hidden?'milestone':'game';
+ close.textContent={result:'Voltar ao resultado',welcome:'Voltar ao início',challenge:'Voltar ao desafio',milestone:'Voltar à conquista',game:'Voltar ao jogo'}[rankingContext];
+ keys.clear();$('#ranking').hidden=false;status.textContent=rankingConfigured()?'Carregando ranking geral…':'Ranking geral ainda não configurado; mostrando resultados deste navegador.';renderRanking(readRanking());close.focus();
  if(!rankingConfigured())return;try{const entries=await remoteRankingCall('getRanking');renderRanking(entries);status.textContent='Ranking geral da turma · melhor resultado de cada nome.'}catch(e){status.textContent='Não foi possível acessar o ranking geral. Exibindo os resultados deste navegador.'}
 }
 function stage(){return STAGES[run.stage]}
 function completedCount(){return run.ids.slice(0,run.stage).reduce((n,a)=>n+a.length,0)+run.index}
 function refresh(){
  $('#stageCount').textContent=`${run.stage+1}/6`;$('#hits').textContent=`${run.correct}/${TOTAL}`;$('#xp').textContent=run.score;
- $('#playerDisplay').hidden=!run.started;$('#playerLabel').textContent=run.name;updateTime();
+ $('#playerDisplay').hidden=!run.started;$('#playerLabel').textContent=run.name;$('#viewRankingGame').hidden=!run.started||run.finished;updateTime();
  $('#mapLabel').textContent=stage().scene;$('#sectorTitle').textContent=`${stage().scene} · ${stage().name}`;
  $('#story').textContent=stage().story;
  $('#objective').textContent=run.atPortal?'Setor completo. Alcance o portal verde à direita.':stage().label+'. Caminhe até o terminal azul.';
@@ -306,6 +310,8 @@ const response=$('#response');
 response.addEventListener('click',e=>{if(e.target.closest('button'))playSound('select')});
 response.addEventListener('change',e=>{if(e.target.matches('select'))playSound('select')});
 function element(tag,text,cls){const el=document.createElement(tag);if(text!==null)el.textContent=text;if(cls)el.className=cls;return el}
+const viewRankingStart=element('button','🏆 Ver ranking geral','secondary welcome-ranking');viewRankingStart.type='button';viewRankingStart.id='viewRankingStart';document.querySelector('#welcome .modal').insertBefore(viewRankingStart,$('#start'));
+const viewRankingGame=element('button','🏆 Ranking geral','sound-toggle ranking-toggle');viewRankingGame.type='button';viewRankingGame.id='viewRankingGame';viewRankingGame.hidden=true;$('.bar').insertBefore(viewRankingGame,$('.stats'));
 function renderChoice(q){selection=null;shuffle(q.options.map((x,i)=>({x,i}))).forEach(({x,i})=>{let b=element('button',x,'option');b.type='button';b.onclick=()=>{response.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');selection=i};response.append(b)})}
 function renderText(){const input=element('input',null,'field');input.type='text';input.autocomplete='off';input.spellcheck=false;input.setAttribute('aria-label','Digite a resposta');input.placeholder='Digite sua resposta';input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!responded)check()});response.append(input)}
 function renderMatch(q){
@@ -374,7 +380,7 @@ function drawScene(t){const s=stage(),i=run.stage;ctx.fillStyle=s.bg;ctx.fillRec
  if(i===5){const origin=[478,275];for(const end of [[390,120],[565,120],[390,425],[565,425]]){ctx.beginPath();ctx.moveTo(...origin);ctx.lineTo(...end);ctx.stroke();ctx.beginPath();ctx.arc(...end,12,0,Math.PI*2);ctx.fill()}ctx.beginPath();ctx.arc(...origin,25,0,Math.PI*2);ctx.stroke()}
  ctx.restore()}
 function overlap(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
-function move(dx,dy,dt){if($('#welcome').hidden===false||$('#challenge').hidden===false||$('#milestone').hidden===false||$('#finish').hidden===false)return;
+function move(dx,dy,dt){if($('#welcome').hidden===false||$('#challenge').hidden===false||$('#milestone').hidden===false||$('#finish').hidden===false||$('#ranking').hidden===false)return;
  const p=run.player,box=()=>({x:p.x,y:p.y,w:27,h:30}),ox=p.x,oy=p.y;p.x+=dx*210*dt;if(walls.some(w=>overlap(box(),w)))p.x=ox;p.y+=dy*210*dt;if(walls.some(w=>overlap(box(),w)))p.y=oy;
  if(!run.atPortal&&overlap(box(),terminal))question();else if(run.atPortal&&overlap(box(),portal))nextStage();
 }
@@ -385,7 +391,7 @@ function draw(t){const c=stage().color;drawScene(t);ctx.save();ctx.strokeStyle=c
  ctx.save();ctx.shadowColor='#b3ef7a';ctx.shadowBlur=run.atPortal?25:0;ctx.fillStyle=run.atPortal?'#b3ef7a':'#35536a';ctx.fillRect(portal.x,portal.y,portal.w,portal.h);ctx.fillStyle='#071521';ctx.fillRect(portal.x+9,portal.y+8,portal.w-18,portal.h-16);ctx.restore();
  const p=run.player;ctx.save();ctx.shadowColor=c;ctx.shadowBlur=11;ctx.fillStyle=c;ctx.fillRect(p.x,p.y+7,27,18);ctx.fillStyle='#e2fcff';ctx.fillRect(p.x+4,p.y,19,8);ctx.fillStyle='#061521';ctx.fillRect(p.x+5,p.y+12,4,4);ctx.fillRect(p.x+18,p.y+12,4,4);ctx.fillStyle='#7ca5b9';ctx.fillRect(p.x+3,p.y+25,7,5);ctx.fillRect(p.x+17,p.y+25,7,5);ctx.restore();requestAnimationFrame(draw)}
 function loop(t){const dt=Math.min(.035,(t-last)/1000);last=t;let dx=0,dy=0;if(keys.has('ArrowLeft')||keys.has('a'))dx--;if(keys.has('ArrowRight')||keys.has('d'))dx++;if(keys.has('ArrowUp')||keys.has('w'))dy--;if(keys.has('ArrowDown')||keys.has('s'))dy++;if(dx&&dy){dx*=.707;dy*=.707}move(dx,dy,dt);requestAnimationFrame(loop)}
-window.addEventListener('keydown',e=>{if(!$('#challenge').hidden||!$('#welcome').hidden||!$('#milestone').hidden||!$('#finish').hidden)return;let k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(k)){e.preventDefault();keys.add(k)}});
+window.addEventListener('keydown',e=>{if(!$('#challenge').hidden||!$('#welcome').hidden||!$('#milestone').hidden||!$('#finish').hidden||!$('#ranking').hidden)return;let k=e.key.length===1?e.key.toLowerCase():e.key;if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(k)){e.preventDefault();keys.add(k)}});
 window.addEventListener('keyup',e=>keys.delete(e.key.length===1?e.key.toLowerCase():e.key));window.addEventListener('blur',()=>keys.clear());
 document.querySelectorAll('.pad button').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(k)});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys.delete(k))});
 $('#start').onclick=()=>{const name=$('#playerName').value.trim().replace(/\s+/g,' ').slice(0,24);if(!name){$('#nameError').hidden=false;$('#playerName').focus();return}
@@ -395,7 +401,9 @@ $('#soundToggle').onclick=()=>{soundEnabled=!soundEnabled;try{localStorage.setIt
 $('#continueStage').onclick=()=>{$('#milestone').hidden=true;playSound('select');map.focus()};
 $('#check').onclick=()=>{if(responded)next();else check()};
 $('#viewRanking').onclick=showRanking;
-$('#backToResult').onclick=()=>{$('#ranking').hidden=true;$('#viewRanking').focus()};
+$('#viewRankingStart').onclick=showRanking;
+$('#viewRankingGame').onclick=showRanking;
+$('#backToResult').onclick=()=>{$('#ranking').hidden=true;if(rankingReturnFocus&&rankingReturnFocus.isConnected)rankingReturnFocus.focus();else if(rankingContext==='welcome')$('#playerName').focus();else map.focus()};
 $('#restart').onclick=()=>{pauseTimer();try{localStorage.removeItem(STORE)}catch(e){}run=makeRun();$('#ranking').hidden=true;$('#finish').hidden=true;$('#milestone').hidden=true;$('#confetti').replaceChildren();$('#playerName').value='';$('#start').textContent='Iniciar missão';$('#nameError').hidden=true;refresh();$('#welcome').hidden=false;$('#playerName').focus()};
 soundButton();
 refresh();if(run.finished){$('#welcome').hidden=true;finish()}else{
