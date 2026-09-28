@@ -260,18 +260,19 @@ function playSound(kind){if(!soundEnabled)return;try{
 function save(){try{localStorage.setItem(STORE,JSON.stringify({...run,elapsedMs:elapsed()}))}catch(e){}}
 function rankingOrder(a,b){return b.score-a.score||a.elapsedMs-b.elapsedMs||a.date-b.date}
 function readRanking(){try{const saved=JSON.parse(localStorage.getItem(RANKING_STORE));return Array.isArray(saved)?saved.filter(e=>e&&typeof e.id==='string'&&typeof e.name==='string'&&Number.isFinite(e.score)&&Number.isFinite(e.correct)&&Number.isFinite(e.elapsedMs)&&Number.isFinite(e.date)).sort(rankingOrder).slice(0,15):[]}catch(e){return []}}
-let rankingFrameReady=false,rankingFrameStarted=false,rankingReturnFocus=null,rankingContext='game';const rankingReadyWaiters=[],rankingRequests=new Map();
+let rankingFrameReady=false,rankingFrameStarted=false,rankingBridgeWindow=null,rankingReturnFocus=null,rankingContext='game';const rankingReadyWaiters=[],rankingRequests=new Map();
 function rankingConfigured(){return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(RANKING_BRIDGE_URL)&&!RANKING_BRIDGE_URL.includes('COLE_')}
 function setupRankingBridge(){if(!rankingConfigured()||rankingFrameStarted)return;rankingFrameStarted=true;$('#rankingBridge').src=RANKING_BRIDGE_URL}
 function waitRankingBridge(){setupRankingBridge();if(rankingFrameReady)return Promise.resolve();return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('O servidor do ranking não respondeu.')),9000);rankingReadyWaiters.push(()=>{clearTimeout(timer);resolve()})})}
 async function remoteRankingCall(method,payload={}){if(!rankingConfigured())throw new Error('Ranking geral ainda não configurado.');await waitRankingBridge();return new Promise((resolve,reject)=>{
  const id=newRunId(),timer=setTimeout(()=>{rankingRequests.delete(id);reject(new Error('Tempo de resposta do ranking esgotado.'))},10000);
  rankingRequests.set(id,{resolve:value=>{clearTimeout(timer);resolve(value)},reject:error=>{clearTimeout(timer);reject(new Error(error||'Falha no ranking.'))}});
- $('#rankingBridge').contentWindow.postMessage({channel:'clab-ranking-v1',type:'request',id,method,payload},'*')
+ rankingBridgeWindow.postMessage({channel:'clab-ranking-v1',type:'request',id,method,payload},'*')
 })}
-window.addEventListener('message',event=>{const frame=$('#rankingBridge');if(!frame||event.source!==frame.contentWindow)return;const data=event.data;if(!data||data.channel!=='clab-ranking-v1')return;
- if(data.type==='ready'){rankingFrameReady=true;rankingReadyWaiters.splice(0).forEach(done=>done());return}
- if(data.type==='response'&&rankingRequests.has(data.id)){const request=rankingRequests.get(data.id);rankingRequests.delete(data.id);data.ok?request.resolve(data.result):request.reject(data.error)}
+function trustedRankingOrigin(origin){try{const host=new URL(origin).hostname;return origin==='https://script.google.com'||host==='googleusercontent.com'||host.endsWith('.googleusercontent.com')}catch(e){return false}}
+window.addEventListener('message',event=>{const data=event.data;if(!rankingFrameStarted||!data||data.channel!=='clab-ranking-v1')return;
+ if(data.type==='ready'){if(!trustedRankingOrigin(event.origin))return;rankingBridgeWindow=event.source;rankingFrameReady=true;rankingReadyWaiters.splice(0).forEach(done=>done());return}
+ if(data.type==='response'&&event.source===rankingBridgeWindow&&rankingRequests.has(data.id)){const request=rankingRequests.get(data.id);rankingRequests.delete(data.id);data.ok?request.resolve(data.result):request.reject(data.error)}
 });
 function recordRanking(){const board=readRanking();if(!board.some(e=>e.id===run.id)){
  board.push({id:run.id,name:run.name.trim().slice(0,24)||'Jogador',score:run.score,correct:run.correct,elapsedMs:run.elapsedMs,date:Date.now()});
